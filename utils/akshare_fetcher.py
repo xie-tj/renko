@@ -172,10 +172,10 @@ class TushareFetcher:
         for i, code in enumerate(stock_codes, 1):
             name = stock_dict.get(code, '')
             
-            # 显示进度条
+            # 显示进度条（使用ASCII字符避免编码问题）
             progress = int((i / total) * 40)
-            bar = '█' * progress + '░' * (40 - progress)
-            print(f"\r\033[K[{bar}] {i}/{total} {code} {name[:8]:<8s}", end='', flush=True)
+            bar = '#' * progress + '-' * (40 - progress)
+            print(f"\r[{bar}] {i}/{total} {code} {name[:8]:<8s}", end='', flush=True)
             
             try:
                 df = self.fetch_stock_history(code, years=6)
@@ -245,10 +245,10 @@ class TushareFetcher:
         failed_codes = []  # 记录失败的股票代码
         
         for i, code in enumerate(existing, 1):
-            # 显示进度条
+            # 显示进度条（使用ASCII字符避免编码问题）
             progress = int((i / total) * 40)
-            bar = '█' * progress + '░' * (40 - progress)
-            print(f"\r\033[K[{bar}] {i}/{total} {code} 更新中...", end='', flush=True)
+            bar = '#' * progress + '-' * (40 - progress)
+            print(f"\r[{bar}] {i}/{total} {code} 更新中...", end='', flush=True)
             
             try:
                 df_new = self.fetch_stock_history(code, years=1)
@@ -289,8 +289,8 @@ class TushareFetcher:
             
             for i, code in enumerate(failed_codes, 1):
                 progress = int((i / len(failed_codes)) * 30)
-                bar = '█' * progress + '░' * (30 - progress)
-                print(f"\r\033[K   重试 [{bar}] {i}/{len(failed_codes)} {code}", end='', flush=True)
+                bar = '#' * progress + '-' * (30 - progress)
+                print(f"\r   重试 [{bar}] {i}/{len(failed_codes)} {code}", end='', flush=True)
                 
                 try:
                     # 每10只股票等待一下，避免触发限流
