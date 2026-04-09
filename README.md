@@ -48,8 +48,8 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/yourusername/renko-short-strategy.git
-cd renko-short-strategy
+git clone https://github.com/xie-tj/renko.git
+cd renko
 
 # 2. 创建虚拟环境
 conda create -n renko python=3.11 -y
