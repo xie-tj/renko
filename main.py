@@ -592,12 +592,22 @@ class RenkoQuantSystem:
         print("=" * 80)
 
         from utils.akshare_fetcher import TushareFetcher
+        from utils.csv_manager import get_csv_manager
 
         fetcher = TushareFetcher(data_dir=str(self.data_dir))
+        csv_manager = get_csv_manager(str(self.data_dir))
 
-        # 使用 daily_update 方法更新到今天
-        print("\n开始更新股票数据...")
-        fetcher.daily_update(max_stocks=max_stocks)
+        # 检查是否已有数据
+        existing_stocks = csv_manager.list_all_stocks()
+        
+        if not existing_stocks:
+            print("\n没有现有数据，执行首次全量抓取...")
+            print("=" * 80)
+            fetcher.init_full_data(max_stocks=max_stocks, delay=0.5)
+        else:
+            # 使用 daily_update 方法更新到今天
+            print(f"\n发现 {len(existing_stocks)} 只现有股票，执行增量更新...")
+            fetcher.daily_update(max_stocks=max_stocks)
 
         print("\n更新完成!")
 
