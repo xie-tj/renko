@@ -38,10 +38,10 @@ class RenkoQuantSystem:
         all_signals = []
 
         for i, code in enumerate(stocks, 1):
-            # 显示进度
+            # 显示进度（使用ASCII字符避免编码问题）
             progress = int((i / len(stocks)) * 30)
-            bar = '█' * progress + '░' * (30 - progress)
-            print(f"\r\033[K  [{bar}] {i}/{len(stocks)} {code}", end='', flush=True)
+            bar = '#' * progress + '-' * (30 - progress)
+            print(f"\r  [{bar}] {i}/{len(stocks)} {code}", end='', flush=True)
 
             # 读取股票数据
             df = csv.read_stock(code)
