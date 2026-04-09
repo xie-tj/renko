@@ -517,11 +517,19 @@ class RenkoQuantSystem:
         # K-Means聚类
         print("\nK-Means聚类...")
         factor_data = latest_signals[factors].fillna(0)
-        kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+        
+        # 根据信号数量动态调整聚类数
+        n_samples = len(latest_signals)
+        n_clusters = min(3, n_samples)  # 聚类数不超过样本数
+        
+        if n_clusters < 3:
+            print(f"  警告: 信号数量({n_samples})少于默认聚类数(3)，调整为{n_clusters}个聚类")
+        
+        kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
         clusters = kmeans.fit_predict(factor_data)
         latest_signals['cluster'] = clusters
 
-        print(f"聚类分布: 聚类0={sum(clusters==0)}, 聚类1={sum(clusters==1)}, 聚类2={sum(clusters==2)}")
+        print(f"聚类分布: " + ", ".join([f"聚类{i}={sum(clusters==i)}" for i in range(n_clusters)]))
 
         # 计算得分
         scores = []
