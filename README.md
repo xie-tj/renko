@@ -321,36 +321,24 @@ date,code,close,renko_strength_entity,vcp_ratio,pivot_proximity,...
 
 ## ❓ 常见问题
 
-### Q1: 选股结果中股票名称显示"未知"？
+### Q1: 运行时报错 `n_samples < n_clusters`？
 
-**原因**: 首次抓取数据时未保存股票名称映射。
-
-**解决**: 删除旧数据重新抓取，会自动保存名称：
-```bash
-# 删除旧数据
-rm data/stocks/*.csv
-rm data/stock_names.json
-
-# 重新抓取
-python main.py update --max-stocks 500
-```
-
-### Q2: 运行时报错 `n_samples < n_clusters`？
-
-**原因**: 信号数量少于 K-Means 聚类数（默认3个）。
-
+**原因**: 信号数量少于 K-Means 聚类数（默认3个）。  
 **解决**: 抓取更多股票数据，或程序会自动调整为 `min(3, n_samples)` 个聚类。
 
-### Q3: Windows 控制台显示乱码？
+---
 
-**原因**: Windows 默认使用 GBK 编码，不支持部分 Unicode 字符。
+### Q2: Windows 控制台显示乱码？
 
+**原因**: Windows 默认使用 GBK 编码，不支持部分 Unicode 字符。  
 **解决**: 设置 UTF-8 编码（可选，不影响程序运行）：
 ```powershell
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 ```
 
-### Q4: 如何调整选股数量？
+---
+
+### Q3: 如何调整选股数量？
 
 ```bash
 # 选股 Top 10
@@ -360,12 +348,25 @@ python main.py select --top 10
 python main.py run --top 10
 ```
 
-### Q5: 如何只更新部分股票进行测试？
+---
+
+### Q4: 如何只更新部分股票进行测试？
 
 ```bash
 # 只更新前100只股票（快速测试）
 python main.py update --max-stocks 100
 ```
+
+---
+
+### Q5: `init` 和 `update` 有什么区别？
+
+| 命令 | 用途 | 说明 |
+|:---|:---|:---|
+| `init` | 首次使用 | 全量抓取所有股票数据，**自动保存股票名称** |
+| `update` | 每日使用 | 增量更新已有股票数据 |
+
+**建议**: 首次使用 `init`，后续使用 `run`（会自动调用 `update`）。
 
 ---
 
