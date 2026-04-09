@@ -169,6 +169,10 @@ class TushareFetcher:
         success = 0
         failed = 0
         
+        # 导入 CSVManager 用于保存股票名称
+        from utils.csv_manager import CSVManager
+        csv_manager = CSVManager(str(self.data_dir))
+        
         for i, code in enumerate(stock_codes, 1):
             name = stock_dict.get(code, '')
             
@@ -182,6 +186,9 @@ class TushareFetcher:
                 if df is not None and not df.empty and len(df) >= 10:
                     file_path = self.stocks_dir / f"{code}.csv"
                     df.to_csv(file_path, index=False, encoding='utf-8-sig')
+                    # 保存股票名称
+                    if name:
+                        csv_manager.set_stock_name(code, name)
                     success += 1
                 else:
                     failed += 1
