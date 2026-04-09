@@ -63,7 +63,10 @@ pip install -r requirements.txt
 [Environment]::SetEnvironmentVariable("TUSHARE_TOKEN", "your_token_here", "User")
 ## 设置后重启终端使环境变量生效
 
-# 5. 运行完整流程
+# 5. 首次全量抓取数据（只需执行一次）
+python main.py init
+
+# 6. 运行完整流程
 python main.py run
 ```
 
@@ -203,6 +206,7 @@ python main.py select --top 20
 
 | 命令 | 功能 | 常用参数 |
 |:-----|:-----|:---------|
+| `init` | 首次全量抓取 | `--max-stocks 500`（首次建议抓取500只以上） |
 | `update` | 每日增量更新 | `--max-stocks 100`（测试用） |
 | `build` | 构建信号池 | - |
 | `train` | 训练因子权重 | - |

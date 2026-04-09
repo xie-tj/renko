@@ -624,7 +624,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description='砖型图量化交易系统')
-    parser.add_argument('command', choices=['update', 'build', 'train', 'select', 'run'], help='命令: update-更新数据, build-构建信号池, train-训练权重, select-执行选股, run-一键运行完整流程')
+    parser.add_argument('command', choices=['init', 'update', 'build', 'train', 'select', 'run'], help='命令: init-首次全量抓取, update-每日增量更新, build-构建信号池, train-训练权重, select-执行选股, run-一键运行完整流程')
     parser.add_argument('--top', type=int, default=20, help='选股数量，默认20')
     parser.add_argument('--max-stocks', type=int, default=None, help='最大更新股票数量')
     parser.add_argument('--recent-days', type=int, default=365, help='训练时使用最近多少天的数据，默认365天')
@@ -637,7 +637,15 @@ if __name__ == "__main__":
 
     system = RenkoQuantSystem()
 
-    if args.command == 'update':
+    if args.command == 'init':
+        # 首次全量抓取
+        print("=" * 80)
+        print(" 首次全量抓取数据")
+        print("=" * 80)
+        from utils.akshare_fetcher import TushareFetcher
+        fetcher = TushareFetcher(data_dir=str(system.data_dir))
+        fetcher.init_full_data(max_stocks=args.max_stocks, delay=0.5)
+    elif args.command == 'update':
         system.update(max_stocks=args.max_stocks)
     elif args.command == 'build':
         system.build()
