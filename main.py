@@ -55,6 +55,9 @@ class RenkoQuantSystem:
             # 先计算砖型图相关列（用于信号判断）
             df = self._calc_renko_signals(df)
 
+            # 在完整日线数据上计算未来3日收益（避免信号池稀疏导致 shift 错误）
+            df['future_3d_return'] = df['close'].shift(-3) / df['open'].shift(-1) - 1
+
             # 提取信号（砖型图信号为True）
             if '砖型图信号' in df.columns:
                 signals = df[df['砖型图信号'] == True].copy()
@@ -291,10 +294,7 @@ class RenkoQuantSystem:
             df = df[df['date'] >= '2020-01-01']
             print(f"加载全部数据: {len(df)} 条信号")
 
-        # 计算未来3日收益
-        print("计算历史收益...")
-        df = df.sort_values(['code', 'date'])
-        df['future_3d_return'] = df.groupby('code')['close'].shift(-3) / df.groupby('code')['close'].shift(-1) - 1
+        # future_3d_return 已在 build() 阶段写入信号池
         df = df[df['future_3d_return'].notna()]
 
         # 划分正负样本（收益>=3%为正）
